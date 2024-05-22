@@ -1,0 +1,5 @@
+venv/
+.env
+user_post.db
+__pycache__/
+images/

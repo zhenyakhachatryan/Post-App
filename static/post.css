@@ -1,0 +1,200 @@
+
+body {
+    background-image: url('https://img.freepik.com/free-vector/realistic-style-technology-particle-background_23-2148426704.jpg');
+    background-size: cover ;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-decoration: none;
+    color: #1f75f5;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+.container1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px; /* Full viewport height */
+}
+.container1 img {
+    max-width: 100%;
+    height: auto;
+}
+
+.like{
+    text-align: center;
+    margin-top: 10px;
+}
+
+h1, h3 {
+    text-align: center;
+    margin-top: 20px;
+    color:aliceblue;
+}
+
+
+label{
+    color: aliceblue;
+    margin-left: 500px;
+}
+.active-dot {
+    width: 8px;
+    height: 8px;
+    background-color: green;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+} 
+.inactive-dot {
+    width: 8px;
+    height: 8px;
+    background-color: rgb(48, 49, 48);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+} 
+.comment, .reply {
+    background-color: beige;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    
+}
+
+.post div, .comment div, .reply div {
+    margin-bottom: 10px;
+    margin-left: 0px; 
+}
+
+.post {
+    background-color:beige;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-bottom: 30px;
+}
+
+.post1 {
+    border-radius: 5px;
+    margin-left: 200px;
+    margin-right: 200px;
+    margin-bottom: 30px;
+}
+
+.comment1 {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 900px;
+    
+}
+
+form {
+    margin-top: 10px;
+}
+
+textarea {
+    width: calc(100% - 22px);
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    padding: 5px 10px;
+    border: none;
+    background-color: #1100ff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+
+input[type="text"]{
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    
+}
+
+input[name="unique"]{
+
+    padding: 5px 10px;
+    border: none;
+    background-color: #1100ff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 650px;
+    
+}
+
+input[type="password"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    
+}
+
+input[type="email"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 30px;
+    
+}
+
+input[type="submit"] {
+    padding: 10px;
+    border: none;
+    background-color: #1100ff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+} 
+
+p {
+    text-align: center;
+    margin-top: 15px;
+    color: aliceblue;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

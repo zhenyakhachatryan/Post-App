@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
+</head>
+<body> 
+    <a href="{{ url_for('post') }}">Back </a> 
+    <h1>Comments for Post: {{ post.post }}</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+   
+    {% if post.images %}
+        <div class="container1">
+            <img src="{{ url_for('static', filename='images/' ~ post.images) }}" alt="Post Image" style="max-width:200px;">
+        </div>
+    {% endif %}
+    <div class="post1">
+            {% for comment in comments %}
+                {%if not comment.answer%}
+                    <div class="comment">                              
+                        <div>
+                            {% if comment.user.last_seen and (current_utc - comment.user.last_seen.replace(tzinfo=timezone.utc)).total_seconds() < 300 %}
+                                <div class="active-dot"></div>
+                            {% else %}
+                                <div class="inactive-dot"></div>
+                            {% endif %}
+                            <strong>{{ comment.user.full_name}}</strong>
+                        </div>
+                        <div>{{ comment.comment }}</div>
+                        <div> {{comment.date|format_date}}</div>
+                        <div>
+                            <form action="/delete_comment" method="POST">
+                                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                <input type="hidden" name="post_id" value="{{post.id}}">
+                                <button  type="submit">Delete Comment</button>
+                            </form>
+                        </div>
+                        <div>
+                            <form action="/reply" method="POST">
+                                <input type="hidden" name="post_id" value="{{ post.id }}"> 
+                                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                <textarea name="reply" required="required" placeholder="Reply"></textarea>
+                                <input type="submit" value="Reply">
+                            </form>
+                        </div>
+                                                        
+                        {% for reply in comments %}
+                            {% if reply.answer and reply.recipient==comment.user_id%}
+                                <div class="reply">
+                                    <h6>Reply</h6>                         
+                                    <div>
+                                        {% if reply.user.last_seen and (current_utc - reply.user.last_seen.replace(tzinfo=timezone.utc)).total_seconds() < 300 %}
+                                            <div class="active-dot"></div>
+                                        {% else %}
+                                            <div class="inactive-dot"></div>
+                                        {% endif %}
+                                        <strong>{{reply.user.full_name}}</strong>
+                                    </div>
+                                    <div>{{reply.comment}}</div>
+                                    <div>{{reply.date|format_date}}</div>
+                                        <form action="/reply" method="POST">
+                                            <input type="hidden" name="post_id" value="{{ post.id }}"> 
+                                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                            <textarea name="reply" required="required" placeholder="Reply"></textarea>
+                                            <input type="submit" value="Reply">
+                                        </form>
+                                        <form action="/delete_comment" method="POST">
+                                            <input type="hidden" name="comment_id" value="{{ reply.id }}">
+                                            <input type="hidden" name="post_id" value="{{post.id}}">
+                                            <button type="submit">Delete Reply</button>
+                                        </form>
+                                </div>
+                            {%endif%}
+                        {%endfor%}
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>No comments yet. Be the first to comment!</p>
+            {% endfor %}
+    </div>  
+</body>
+</html>

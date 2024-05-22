@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
+</head>
+<body>
+    <h3>Sign in</h3>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="text-align: center;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div>
+    <form action="/login" method="post">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"  autocomplete="email" required><br>
+        <label for="password">Password:</label> 
+        <input type="password"  id="password" name="password" autocomplete="current-password" required><br>
+        <input type="submit" value="Submit" name="unique">
+    </form>
+    </div>
+    <p>Don't have an account?<a href='/register'>Register</a></p>
+</body>
+</html>

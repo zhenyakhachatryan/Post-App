@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
+    <title>Post Likes</title>
+</head>
+<body>
+    <a href="{{ url_for('post') }}">Back </a> 
+    <h1>Likes for Post: {{ post.post }}</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+        {% if post.images %}
+            <div class="container1">
+                <img src="{{ url_for('static', filename='images/' ~ post.images) }}" alt="Post Image" style="max-width:200px;">
+            </div>
+        {% endif %}
+        <div class="like">
+            <br>
+            <ul>
+                {% for like in likes %}
+                    <div>
+                        {% if like.user.last_seen and (current_utc - like.user.last_seen.replace(tzinfo=timezone.utc)).total_seconds() < 300 %}
+                            <div class="active-dot"></div>
+                        {% else %}
+                            <div class="inactive-dot"></div>
+                        {% endif %}
+                        <strong style="color: aliceblue;">{{ like.user.full_name }}</strong><br>
+                    
+                        <form action="{{ url_for('post_unlike', post_id=post.id) }}" method="post" style="display:inline;">
+                            <button type="submit">Unlike</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <p>No likes yet.</p>
+                {% endfor %}
+            </ul>
+        </div>
+</body>
+</html>

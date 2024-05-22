@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='post.css') }}">
+</head>
+<body>
+    <h3>Create a New Post</h3>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <a href="/post">Back</a>
+    <div class="post">
+    <form action="{{ url_for('post') }}" method="post" enctype="multipart/form-data">
+        <label for="post">Post Content:</label><br>
+        <textarea name="post" id="post" rows="4" cols="50" placeholder="Write your post here..."></textarea>
+        <br><br>
+        <label for="image">Upload an Image:</label><br>
+        <input type="file" name="image" id="image" accept="image/*">
+        <br><br>
+        <button type="submit">Post</button>
+    </form>
+    </div>
+    
+</body>
+</html>
