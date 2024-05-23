@@ -62,20 +62,20 @@ def register():
 
         if not all([full_name,email,password]):
             flash('Invalid data provided!')
-
-        user=USER.query.filter_by(email=email).first()
-        if user:
-            flash('Email is already taken. Please choose another one!')
-
-
-        hashed_password=generate_password_hash(password)
-
-        new_user=USER(full_name=full_name,email=email,password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('You registered successfully! Now you can log in')
-        return redirect(url_for('login'))
+        else:
+            user=USER.query.filter_by(email=email).first()
+            if user:
+                flash('Email is already taken. Please choose another one!')
+    
+            else:
+                hashed_password=generate_password_hash(password)
+        
+                new_user=USER(full_name=full_name,email=email,password=hashed_password)
+                db.session.add(new_user)
+                db.session.commit()
+        
+                flash('You registered successfully! Now you can log in')
+                return redirect(url_for('login'))
     return render_template('register.html')
 
 
@@ -93,18 +93,18 @@ def login():
         if not all([email,password]):
             flash('Invalid data provided!')
 
-        
-        user=USER.query.filter_by(email=email).first() 
-        if not user:
-            flash('Username was not found. Please register first')
-            return redirect(url_for('register'))
-        if check_password_hash(user.password,password):
-            session['user_id']=user.id
-            login_user(user)
-            flash('You logged in succeessfully!')
-            return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
         else:
-            flash('Invalid username or password')
+            user=USER.query.filter_by(email=email).first() 
+            if not user:
+                flash('Username was not found. Please register first')
+                return redirect(url_for('register'))
+            elif check_password_hash(user.password,password):
+                session['user_id']=user.id
+                login_user(user)
+                flash('You logged in succeessfully!')
+                return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
+            else:
+                flash('Invalid username or password')
     
     return render_template('login.html')
 
@@ -124,21 +124,21 @@ def post():
         if not post and not image:
             flash('Both fields cannot be empty!')
             return redirect(url_for('post'))
-        
-        if image:
-            if allowed_file(image.filename):
-                filename = secure_filename(image.filename)
-                image_path = os.path.join(UPLOAD_FOLDER, filename)
-                image.save(image_path)
-                images=filename
-            else:
-                flash('Invalid file format')
-                return redirect(url_for('post'))
+        else:
+            if image:
+                if allowed_file(image.filename):
+                    filename = secure_filename(image.filename)
+                    image_path = os.path.join(UPLOAD_FOLDER, filename)
+                    image.save(image_path)
+                    images=filename
+                else:
+                    flash('Invalid file format')
+                    return redirect(url_for('post'))
 
-        new_post=POST(user_id=user_id,post=post,images=images)
-
-        db.session.add(new_post)
-        db.session.commit()
+            new_post=POST(user_id=user_id,post=post,images=images)
+    
+            db.session.add(new_post)
+            db.session.commit()
     posts=POST.query.all()
     comments=COMMENT.query.all()
     current_utc = datetime.now(timezone.utc)
@@ -224,16 +224,16 @@ def comment():
             flash('Post ID is missing.')
             return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
         
-        if not comment:
+        elif not comment:
             flash('Comment is empty.' )
             return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
         
-        
-        new_comment=COMMENT(user_id=user_id,comment=comment,post_id=post_id,answer=False,recipient=0)
-
-        db.session.add(new_comment)
-        db.session.commit()
-        flash('Comment added successfully!')
+        else:
+            new_comment=COMMENT(user_id=user_id,comment=comment,post_id=post_id,answer=False,recipient=0)
+    
+            db.session.add(new_comment)
+            db.session.commit()
+            flash('Comment added successfully!')
     
     return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
 
@@ -256,16 +256,16 @@ def reply():
             flash('Comment not found!')
             return render_template('comment.html',post=post_id, comments=comments,current_utc=current_utc)
         
-        if not reply:
+        elif not reply:
             flash('Reply is empty.')
             return render_template('comment.html',post=post_id, comments=comments,current_utc=current_utc)
-        
-        recipient_id = comment.user_id
-        new_comment=COMMENT(user_id=user_id,comment=reply,post_id=post_id,answer=True,recipient=recipient_id)
-
-        db.session.add(new_comment)
-        db.session.commit()
-        flash('Reply added successfully!')
+        else:
+            recipient_id = comment.user_id
+            new_comment=COMMENT(user_id=user_id,comment=reply,post_id=post_id,answer=True,recipient=recipient_id)
+    
+            db.session.add(new_comment)
+            db.session.commit()
+            flash('Reply added successfully!')
     
     return render_template('comment.html',post=post_id, comments=comments,current_utc=current_utc)
 
@@ -281,19 +281,19 @@ def delete_comment():
         if not comment_id and post_id:
             flash('There is no comment to delete')
             return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
-
-        comment = COMMENT.query.filter_by(id=comment_id,post_id=post_id).first()
-
-        if not comment:
-            flash('Comment not found.')
-            return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
-        
-        if comment.user_id != current_user.id:
-            flash('You do not have permission to delete this comment.')
         else:
-            db.session.delete(comment)
-            db.session.commit()
-            flash('Comment deleted successfully!')
+            comment = COMMENT.query.filter_by(id=comment_id,post_id=post_id).first()
+    
+            if not comment:
+                flash('Comment not found.')
+                return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
+            
+            elif comment.user_id != current_user.id:
+                flash('You do not have permission to delete this comment.')
+            else:
+                db.session.delete(comment)
+                db.session.commit()
+                flash('Comment deleted successfully!')
     posts = POST.query.options(joinedload(POST.user)).all()
     return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
 
@@ -309,21 +309,21 @@ def delete_post():
         if not post_id:
             flash('There is no post to delete')
             return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
-
-        post = POST.query.filter_by(id=post_id).first()
-
-        if not post:
-            flash('Post not found!')
-            return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
-        
-        if post.user_id != current_user.id:
-            flash('You do not have permission to delete this post!')
         else:
-            LIKE.query.filter_by(post_id=post_id).delete()
-            COMMENT.query.filter_by(post_id=post_id).delete()
-            db.session.delete(post)
-            db.session.commit()
-            flash('Post deleted successfully!')
+            post = POST.query.filter_by(id=post_id).first()
+    
+            if not post:
+                flash('Post not found!')
+                return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
+            
+            elif post.user_id != current_user.id:
+                flash('You do not have permission to delete this post!')
+            else:
+                LIKE.query.filter_by(post_id=post_id).delete()
+                COMMENT.query.filter_by(post_id=post_id).delete()
+                db.session.delete(post)
+                db.session.commit()
+                flash('Post deleted successfully!')
     posts = POST.query.options(joinedload(POST.user)).all()
     return render_template('page.html',comments=comments,posts=posts,current_utc=current_utc)
 
